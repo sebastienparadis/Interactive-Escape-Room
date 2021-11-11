@@ -68,7 +68,7 @@ int main(void)
         DisplaySensor(GPIOB, GPIO_PIN_4);
         DisplaySensor(GPIOB, GPIO_PIN_5);
         DisplaySensor(GPIOB, GPIO_PIN_3);
-        SerialPuts("     \r");
+        SerialPuts("\r");
     }
 #endif
     // as mentioned above, only one of the following code sections will be used
