@@ -17,7 +17,8 @@
 // #define KEYPAD_SEVEN_SEGMENT
 // #define COLOR_LED
 // #define ROTARY_ENCODER
-// #define ANALOG
+ //#define ANALOG
+ #define REED_TEST
 // #define PWM
 
 #include <stdbool.h> // booleans, i.e. true and false
@@ -26,10 +27,10 @@
 
 #include "ece198.h"
 
-void DisplaySensor(uint16_t pin);
+void DisplaySensor(GPIO_TypeDef *port, uint16_t pin);
 
-void DisplaySensor(uint16_t pin){
-    if(!HAL_GPIO_ReadPin(GPIOB,pin))
+void DisplaySensor(GPIO_TypeDef *port, uint16_t pin){
+    if(!HAL_GPIO_ReadPin(port,pin))
         SerialPutc('X');
     else
         SerialPutc('_');
@@ -47,7 +48,8 @@ int main(void)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
 
     // initialize the pins to be input, output, alternate function, etc...
-    InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
+    InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
+    InitializePin(GPIOA, GPIO_PIN_8 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
@@ -59,12 +61,16 @@ int main(void)
     SerialSetup(9600);
     SerialPuts("\r\n\n");
 
+#ifdef REED_TEST
     while(1){
-        DisplaySensor(GPIO_PIN_10);
-        DisplaySensor(GPIO_PIN_4);
-        SerialPuts("  \r");
+        DisplaySensor(GPIOA, GPIO_PIN_8);
+        DisplaySensor(GPIOB, GPIO_PIN_10);
+        DisplaySensor(GPIOB, GPIO_PIN_4);
+        DisplaySensor(GPIOB, GPIO_PIN_5);
+        DisplaySensor(GPIOB, GPIO_PIN_3);
+        SerialPuts("     \r");
     }
-
+#endif
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
