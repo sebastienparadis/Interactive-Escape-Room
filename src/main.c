@@ -13,12 +13,12 @@
 // #define TIME_RAND
 // #define KEYPAD
 // #define KEYPAD_CONTROL
-// #define SEVEN_SEGMENT
+//#define SEVEN_SEGMENT
 // #define KEYPAD_SEVEN_SEGMENT
 // #define COLOR_LED
-// #define ROTARY_ENCODER
- //#define ANALOG
- #define REED_TEST
+// #define ROTARY_ENCODER  
+#define ANALOG
+//#define REED_TEST
 // #define PWM
 
 #include <stdbool.h> // booleans, i.e. true and false
@@ -26,6 +26,7 @@
 #include <stdlib.h>  // srand() and random() functions
 
 #include "ece198.h"
+#include "morse.h"
 
 void DisplaySensor(GPIO_TypeDef *port, uint16_t pin);
 
@@ -241,7 +242,7 @@ int main(void)
     // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
 
     __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
-    ADC_HandleTypeDef adcInstance;      // this variable stores an instance of the ADC
+    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
     InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
     // Enables the input pins
     // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
