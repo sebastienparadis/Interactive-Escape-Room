@@ -8,7 +8,7 @@
 // To run a particular example, you should remove the comment (//) in
 // front of exactly ONE of the following lines:
 
- //#define BUTTON_BLINK
+//#define BUTTON_BLINK
 // #define LIGHT_SCHEDULER
 // #define TIME_RAND
 // #define KEYPAD
@@ -40,7 +40,6 @@ void DisplaySensor(GPIO_TypeDef *port, uint16_t pin){
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
-
     // Peripherals (including GPIOs) are disabled by default to save power, so we
     // use the Reset and Clock Control registers to enable the GPIO peripherals that we're using.
 
@@ -58,7 +57,6 @@ int main(void)
 
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
-
     SerialSetup(9600);
     SerialPuts("\r\n\n");
 
