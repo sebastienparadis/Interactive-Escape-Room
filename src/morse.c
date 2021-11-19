@@ -1,4 +1,4 @@
-#include "morse.h"
+/*#include "morse.h"
 #include "ece198.h"
 
 //function exits once player has correctly entered the morse code pattern using the flashlight
@@ -26,3 +26,4 @@ void Morse(){
         } 
     }
 }
+*/

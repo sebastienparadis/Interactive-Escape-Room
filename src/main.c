@@ -13,11 +13,11 @@
 // #define TIME_RAND
 // #define KEYPAD
 // #define KEYPAD_CONTROL
-//#define SEVEN_SEGMENT
+//#define SEVEN_SEGMENT_TEST
 // #define KEYPAD_SEVEN_SEGMENT
 // #define COLOR_LED
 // #define ROTARY_ENCODER  
-#define ANALOG
+//#define JOYSTICK_TEST
 //#define REED_TEST
 // #define PWM
 
@@ -162,17 +162,24 @@ int main(void)
     }
 #endif
 
-#ifdef SEVEN_SEGMENT
+#ifdef SEVEN_SEGMENT_TEST
     // Display the numbers 0 to 9 inclusive on the 7-segment display, pausing for a second between each one.
     // (remember that the GND connection on the display must go through a 220 ohm current-limiting resistor!)
+    Initialize7Segment(); //Updated to initialize correct pins
     
-    Initialize7Segment();
-    while (true)
-        for (int i = 0; i < 10; ++i)
+    // Testing PrintLocation()
+    
+    char c[4] = {'O', 'R','S','E'};
+    while (true){  
+        for (int i = 0; i < 4; ++i)
         {
-            Display7Segment(i);
+            PrintLocation(c[i]);
             HAL_Delay(1000);  // 1000 milliseconds == 1 second
+            
         }
+    }
+
+    
 #endif
 
 #ifdef KEYPAD_SEVEN_SEGMENT
@@ -238,7 +245,7 @@ int main(void)
     }
 #endif
 
-#ifdef ANALOG
+#ifdef JOYSTICK_TEST
     // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
 
     __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
@@ -249,10 +256,8 @@ int main(void)
     InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
     while (true)
     {
-        // read the ADC values (0 -> 0V, 2^12 -> 3.3V)
-        uint16_t raw0 = ReadADC(&adcInstance, ADC_CHANNEL_0);
-        uint16_t raw1 = ReadADC(&adcInstance, ADC_CHANNEL_1);
-
+        uint16_t raw0 = ReadJoystick(&adcInstance);
+        uint16_t raw1 = ReadJoystick(&adcInstance);
         // print the ADC values
         char buff[100];
         sprintf(buff, "Channel0: %hu, Channel1: %hu\r\n", raw0, raw1);  // hu == "unsigned short" (16 bit)
