@@ -1,16 +1,19 @@
 #include <stdbool.h>
 #include "helperfunctions.h"
 
-/* Read Reed Switches
-Assigning and returning a corresponding integer value to each reed switch
-This returns an int where each bit corresponds to a reed switch being on, ob10000 being the first
 
+//Read Reed Switches
+/* 
+Return an int where each bit corresponds to a reed switch being on, ob10000 being the first
+note: this is used to verify that the user has the proper pins activated after each mini-game
 
-First Location, "M" --> GPIO PIN B 10
-Second Location, "O" --> GPIO PIN B 4
-Third Location, "R" --> GPIO PIN B 5
-Fourth Location, "S" --> GPIO PIN B 3
-Fifth Location, "E" --> GPIO PIN A 10 */
+LOCATION LAYOUT
+First Location,  "M"  -->    GPIO PIN B 10
+Second Location, "O"  -->    GPIO PIN B 4
+Third Location,  "R"  -->    GPIO PIN B 5
+Fourth Location, "S"  -->    GPIO PIN B 3
+Fifth Location,  "E"  -->    GPIO PIN A 10 
+*/
 int ReadReed()
 {
     int output;
@@ -19,19 +22,19 @@ int ReadReed()
     {
         output += 0b10000; 
     }
-    else if(!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4)) //Check if the second reed switch is activated
+    if(!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4)) //Check if the second reed switch is activated
     {
         output += 0b1000;
     }
-    else if (!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5)) //Check if the third reed switch is activated
+    if (!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5)) //Check if the third reed switch is activated
     {
         output += 0b100;
     }
-    else if (!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3)) //Check if the fourth reed switch is activated
+    if (!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3)) //Check if the fourth reed switch is activated
     {
         output += 0b10;
     }    
-    else if (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10)) //Check if the fifth reed switch is activated
+    if (!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10)) //Check if the fifth reed switch is activated
     {
         output += 0b1;
     }    
@@ -39,24 +42,11 @@ int ReadReed()
     return output;
 }
 
-
-/* Read Joystick
-
-// Detecting whether the user inputs a left, up, right, or down motion on the joysitck
-
-// if (joystick range > range for motion to left)
-//      return 1;
-
-// if (joystick range > range for motion to up)
-//      return 2;
-
-// if (joystick range > range for motion to right)
-//      return 3;
-
-// if (joystick range > range for motion to down)
-//      return 4;
-
-//Range in the x ---->     LEFT   <--->     RIGHT
+// Read Joystick
+/* 
+Detect whether the direction of an input from the joystick, either left, up, right, or down.
+Return a distinct integer value for each of the four possible directions.
+note: this is used to determine the attemptive pattern input by the user to compare to the actual pattern. 
 */
 
 int ReadJoystick(ADC_HandleTypeDef *adc)
@@ -101,8 +91,8 @@ Segment G (MIDDLE) --> C7 --> GPIOC, GPIO_PIN_7;
 */
 void PrintLocation(char location)
 {
-    // Turning off the previously displayed location letter each time PrintLocation() is called
-    // If PrintLocation() with an argument that is not a valid location character, display turns off.
+    // Turn off the previously displayed location letter each time PrintLocation() is called
+    // If PrintLocation() is called with an argument that is not one of the valid location character ('O', 'R', 'S', 'E'), display turns off.
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, false); //Top
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, false); //Upper Right
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, false); //Lower Right
@@ -151,4 +141,3 @@ void PrintLocation(char location)
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, true); //Middle
     }
 }
-

@@ -29,7 +29,8 @@
 // #define COLOR_LED
 // #define ROTARY_ENCODER  
 //#define JOYSTICK_TEST
-//#define REED_TEST
+//#define PHOTORESISTOR_TEST
+#define REED_TEST
 // #define PWM
 
 
@@ -92,9 +93,9 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
   /* Initialize all led peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_TIM1_Init();
+ MX_GPIO_Init();
+ MX_DMA_Init();
+MX_TIM1_Init();
 //end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
 
  // Peripherals (including GPIOs) are disabled by default to save power, so we
@@ -106,7 +107,6 @@ int main(void)
 
     // initialize the pins to be input, output, alternate function, etc...
     InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
-    InitializePin(GPIOA, GPIO_PIN_8 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
@@ -116,7 +116,8 @@ int main(void)
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
     SerialSetup(9600);
     SerialPuts("\r\n\n");
-
+Set_LED(0,0,0,255);
+WS2812_Send();
 #ifdef REED_TEST
     while(1){
         DisplaySensor(GPIOA, GPIO_PIN_8);
@@ -320,6 +321,26 @@ int main(void)
     }
 #endif
 
+#ifdef PHOTORESISTOR_TEST
+    // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
+
+    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
+    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+    // Enables the input pins
+    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
+    while (true)
+    {
+        uint16_t raw0 = ReadADC(&adcInstance, ADC_CHANNEL_0);
+        uint16_t raw1 = ReadADC(&adcInstance, ADC_CHANNEL_1);
+        // print the ADC values
+        char buff[100];
+        sprintf(buff, "Channel0: %hu, Channel1: %hu\r\n", raw0, raw1);  // hu == "unsigned short" (16 bit)
+        SerialPuts(buff);
+    }
+#endif
+
 #ifdef PWM
     // Use Pulse Width Modulation to fade the LED in and out.
     uint16_t period = 100, prescale = 16;
@@ -470,7 +491,7 @@ void SystemClock_Config(void)
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+                             |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
