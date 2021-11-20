@@ -1,8 +1,9 @@
 #include <stdbool.h>
 #include "helperfunctions.h"
 
+// FUNCTION DEFINITIONS
 
-//Read Reed Switches
+// READ REED SWITCH
 /* 
 Return an int where each bit corresponds to a reed switch being on, ob10000 being the first
 note: this is used to verify that the user has the proper pins activated after each mini-game
@@ -42,7 +43,7 @@ int ReadReed()
     return output;
 }
 
-// Read Joystick
+// READ JOYSTICK
 /* 
 Detect whether the direction of an input from the joystick, either left, up, right, or down.
 Return a distinct integer value for each of the four possible directions.
@@ -79,7 +80,7 @@ int ReadJoystick(ADC_HandleTypeDef *adc)
 
 
 
-// Printing the Next Location on the 7-Segment Display
+// PRINT FIRST CHARACTER OF NEXT LOCATION ON 7-SEGMENT DISPLAY
 /* GPIO Pin layout
 Segment A (TOP) --> B8 --> GPIOB, GPIO_PIN_8;
 Segment B (UPPER RIGHT) --> B9 --> GPIOB, GPIO_PIN_9;
@@ -141,3 +142,26 @@ void PrintLocation(char location)
         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, true); //Middle
     }
 }
+
+// READ PHOTO RESISTOR
+// Read the photoresistor voltage value
+uint16_t ReadPhotoResistor(ADC_HandleTypeDef *adc)
+{
+    return ReadADC(adc, ADC_CHANNEL_4); 
+}
+
+// CHECK AND COMPARE PHOTO RESISTOR VALUES
+// Compare the recorded room brightness with the current brightness.
+// Checks if there is a significant voltage increase, indicating a flashed light
+bool CheckPhotoResistor(uint16_t RoomBrightness, ADC_HandleTypeDef *adc)
+{
+    if ((ReadPhotoResistor(adc) - RoomBrightness) >= 300)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
