@@ -96,7 +96,6 @@ int main(void)
   MX_DMA_Init();
   MX_TIM1_Init();
 //end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
-
  // Peripherals (including GPIOs) are disabled by default to save power, so we
     // use the Reset and Clock Control registers to enable the GPIO peripherals that we're using.
 
@@ -106,12 +105,10 @@ int main(void)
 
     // initialize the pins to be input, output, alternate function, etc...
     InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
-    InitializePin(GPIOA, GPIO_PIN_8 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
-
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
     SerialSetup(9600);

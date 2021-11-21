@@ -17,7 +17,7 @@ void SerialPuts(char *ptr);
 // macro for reading an entire port (we provide this so students don't need to know about structs)
 #define ReadPort(port) (port->IDR)
 
-int ReadEncoder(GPIO_TypeDef *clkport, int clkpin, GPIO_TypeDef *dtport, int dtpin, bool *previous);
+//int ReadEncoder(GPIO_TypeDef *clkport, int clkpin, GPIO_TypeDef *dtport, int dtpin, bool *previous);
 
 void InitializePWMTimer(TIM_HandleTypeDef *timer, TIM_TypeDef *whichTimer, uint16_t period, uint16_t prescale);
 void InitializePWMChannel(TIM_HandleTypeDef *timer, uint32_t channel);
