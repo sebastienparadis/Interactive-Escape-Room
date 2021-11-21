@@ -19,18 +19,21 @@
   */
 /* USER CODE END Header */
 
+//#define LED_JOYSTICK_TEST
 //#define BUTTON_BLINK
-// #define LIGHT_SCHEDULER
-// #define TIME_RAND
-// #define KEYPAD
-// #define KEYPAD_CONTROL
+//#define LIGHT_SCHEDULER
+//#define TIME_RAND
+//#define KEYPAD
+//#define KEYPAD_CONTROL
 //#define SEVEN_SEGMENT_TEST
-// #define KEYPAD_SEVEN_SEGMENT
-// #define COLOR_LED
-// #define ROTARY_ENCODER  
+//#define KEYPAD_SEVEN_SEGMENT
+//#define COLOR_LED
+//#define ROTARY_ENCODER  
 //#define JOYSTICK_TEST
+//#define PHOTORESISTOR_TEST
+//#define LIGHT_FLASH_PHOTORESISTOR_TEST_2
 //#define REED_TEST
-// #define PWM
+//#define PWM
 
 
 
@@ -92,9 +95,9 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
   /* Initialize all led peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_TIM1_Init();
+ MX_GPIO_Init();
+ MX_DMA_Init();
+MX_TIM1_Init();
 //end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
  // Peripherals (including GPIOs) are disabled by default to save power, so we
     // use the Reset and Clock Control registers to enable the GPIO peripherals that we're using.
@@ -111,8 +114,34 @@ int main(void)
     // is required, since there's one on the board)
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
-    SerialSetup(9600);
-    SerialPuts("\r\n\n");
+    //SerialSetup(9600);
+    //SerialPuts("\r\n\n");
+#ifdef LED_JOYSTICK_TEST
+__HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
+    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+    // Enables the input pins
+    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
+    int i=0;
+    while (true)
+    {
+        if(ReadJoystick(&adcInstance))
+        {
+          if(ReadJoystick(&adcInstance) ==1)
+            Set_LED(0,255,0,0);
+          if(ReadJoystick(&adcInstance) ==2)
+            Set_LED(0,0,255,0);
+          if(ReadJoystick(&adcInstance) ==3)
+            Set_LED(0,0,0,255);
+          if(ReadJoystick(&adcInstance) ==4)
+            Set_LED(0,255,0,255);
+          WS2812_Send();
+          ++i;
+        }
+        
+    }
+#endif
 
 #ifdef REED_TEST
     while(1){
@@ -317,6 +346,50 @@ int main(void)
     }
 #endif
 
+#ifdef PHOTORESISTOR_TEST
+    // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
+
+    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
+    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+    // Enables the input pins
+    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_4 , GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
+    while (true)
+    {
+        uint16_t raw0 = ReadADC(&adcInstance, ADC_CHANNEL_4);
+        uint16_t raw1 = ReadADC(&adcInstance, ADC_CHANNEL_1);
+        // print the ADC values
+        char buff[100];
+        sprintf(buff, "Channel0: %hu, Channel1: %hu\r\n", raw0, raw1);  // hu == "unsigned short" (16 bit)
+        SerialPuts(buff);
+    }
+#endif
+
+#ifdef LIGHT_FLASH_PHOTORESISTOR_TEST_2
+    // Calls ReadPhotoResistor() and prints out the voltage value
+    // Print a '1' if light is shined at the photoresistor; print a '0' when no light is being shined
+
+    // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
+
+    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
+    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+    // Enables the input pins
+    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_4 , GPIO_MODE_ANALOG, GPIO_NOPULL, 0);
+    int RoomBrightness = ReadPhotoResistor(&adcInstance);   
+    while (true)
+    {
+        uint16_t raw0 = CheckPhotoResistor(RoomBrightness, &adcInstance);
+        uint16_t raw1 = ReadPhotoResistor(&adcInstance);
+        // print the ADC values
+        char buff[100];
+        sprintf(buff, "Channel0: %hu, Channel1: %hu\r\n", raw0, raw1);  // hu == "unsigned short" (16 bit)
+        SerialPuts(buff);
+    }
+#endif
+
 #ifdef PWM
     // Use Pulse Width Modulation to fade the LED in and out.
     uint16_t period = 100, prescale = 16;
@@ -467,7 +540,7 @@ void SystemClock_Config(void)
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+                             |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
