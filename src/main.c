@@ -19,20 +19,21 @@
   */
 /* USER CODE END Header */
 
+//#define LED_JOYSTICK_TEST
 //#define BUTTON_BLINK
-// #define LIGHT_SCHEDULER
-// #define TIME_RAND
-// #define KEYPAD
-// #define KEYPAD_CONTROL
+//#define LIGHT_SCHEDULER
+//#define TIME_RAND
+//#define KEYPAD
+//#define KEYPAD_CONTROL
 //#define SEVEN_SEGMENT_TEST
-// #define KEYPAD_SEVEN_SEGMENT
-// #define COLOR_LED
-// #define ROTARY_ENCODER  
+//#define KEYPAD_SEVEN_SEGMENT
+//#define COLOR_LED
+//#define ROTARY_ENCODER  
 //#define JOYSTICK_TEST
 //#define PHOTORESISTOR_TEST
 //#define LIGHT_FLASH_PHOTORESISTOR_TEST_2
 //#define REED_TEST
-// #define PWM
+//#define PWM
 
 
 
@@ -115,8 +116,34 @@ MX_TIM1_Init();
 
     // set up for serial communication to the host computer
     // (anything we write to the serial port will appear in the terminal (i.e. serial monitor) in VSCode)
-    SerialSetup(9600);
-    SerialPuts("\r\n\n");
+    //SerialSetup(9600);
+    //SerialPuts("\r\n\n");
+#ifdef LED_JOYSTICK_TEST
+__HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
+    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+    // Enables the input pins
+    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
+    int i=0;
+    while (true)
+    {
+        if(ReadJoystick(&adcInstance))
+        {
+          if(ReadJoystick(&adcInstance) ==1)
+            Set_LED(0,255,0,0);
+          if(ReadJoystick(&adcInstance) ==2)
+            Set_LED(0,0,255,0);
+          if(ReadJoystick(&adcInstance) ==3)
+            Set_LED(0,0,0,255);
+          if(ReadJoystick(&adcInstance) ==4)
+            Set_LED(0,255,0,255);
+          WS2812_Send();
+          ++i;
+        }
+        
+    }
+#endif
 
 #ifdef REED_TEST
     while(1){
@@ -514,8 +541,8 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB buses clocks
   */
-  //RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-   //                          |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                             |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
