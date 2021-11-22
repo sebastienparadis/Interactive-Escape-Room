@@ -42,7 +42,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+ADC_HandleTypeDef adcInstance;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

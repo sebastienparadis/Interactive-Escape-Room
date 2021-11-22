@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "helperfunctions.h"
+#include "main.h"
 
 // FUNCTION DEFINITIONS
 
@@ -145,17 +146,17 @@ void PrintLocation(char location)
 
 // READ PHOTO RESISTOR
 // Read the photoresistor voltage value
-uint16_t ReadPhotoResistor(ADC_HandleTypeDef *adc)
+uint16_t ReadPhotoResistor()
 {
-    return ReadADC(adc, ADC_CHANNEL_4); 
+    return ReadADC(&adcInstance, ADC_CHANNEL_4); 
 }
 
 // CHECK AND COMPARE PHOTO RESISTOR VALUES
 // Compare the recorded room brightness with the current brightness.
 // Checks if there is a significant voltage increase, indicating a flashed light
-bool CheckPhotoResistor(uint16_t RoomBrightness, ADC_HandleTypeDef *adc)
+bool CheckPhotoResistor(uint16_t RoomBrightness)
 {
-    if ((ReadPhotoResistor(adc) - RoomBrightness) >= 300)
+    if ((ReadPhotoResistor() - RoomBrightness) >= 300)
     {
         return 1;
     }
@@ -164,4 +165,3 @@ bool CheckPhotoResistor(uint16_t RoomBrightness, ADC_HandleTypeDef *adc)
         return 0;
     }
 }
-
