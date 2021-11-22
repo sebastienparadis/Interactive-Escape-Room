@@ -52,30 +52,7 @@
 #include <stdio.h>   // sprintf() function
 #include "main.h"
 
-#define MAX_LED 300
-#define USE_BRIGHTNESS 0
 
-/* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim1;
-DMA_HandleTypeDef hdma_tim1_ch1;
-
-
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
-static void MX_TIM1_Init(void);
-void Set_LED (int LEDnum, int Red, int Green, int Blue);
-void Set_Brightness (int brightness);
-void WS2812_Send (void);
-void Reset_LED (void);
-void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim);
-
-uint8_t LED_Data[MAX_LED][4];
-uint8_t LED_Mod[MAX_LED][4];  // for brightness
-uint16_t pwmData[(24*MAX_LED)+50];
-
-//end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
 
 void DisplaySensor(GPIO_TypeDef *port, uint16_t pin);
 
