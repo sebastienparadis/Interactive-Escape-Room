@@ -95,8 +95,8 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
   /* Initialize all led peripherals */
- MX_GPIO_Init();
- MX_DMA_Init();
+MX_GPIO_Init();
+MX_DMA_Init();
 MX_TIM1_Init();
 //end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
 
@@ -106,7 +106,12 @@ MX_TIM1_Init();
     __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
-
+    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+     // this variable stores an instance of the ADC
+    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+    // Enables the input pins
+    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0); 
     // initialize the pins to be input, output, alternate function, etc...
     InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
@@ -119,7 +124,7 @@ MX_TIM1_Init();
     //SerialSetup(9600);
     //SerialPuts("\r\n\n");
 #ifdef LED_JOYSTICK_TEST
-__HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
+    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
     ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
     InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
     // Enables the input pins
@@ -131,13 +136,13 @@ __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
         if(ReadJoystick(&adcInstance))
         {
           if(ReadJoystick(&adcInstance) ==1)
-            Set_LED(0,255,0,0);
+            Set_LED(0,115,20,20);
           if(ReadJoystick(&adcInstance) ==2)
-            Set_LED(0,0,255,0);
+            Set_LED(0,20,90,40);
           if(ReadJoystick(&adcInstance) ==3)
-            Set_LED(0,0,0,255);
+            Set_LED(0,200,50,5);
           if(ReadJoystick(&adcInstance) ==4)
-            Set_LED(0,255,0,255);
+            Set_LED(0,12,100,90);
           WS2812_Send();
           ++i;
         }
@@ -331,12 +336,7 @@ __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
 #ifdef JOYSTICK_TEST
     // Use the ADC (Analog to Digital Converter) to read voltage values from two pins.
 
-    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
-    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
-    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
-    // Enables the input pins
-    // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
-    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
+      
     while (true)
     {
         uint16_t raw0 = ReadJoystick(&adcInstance);

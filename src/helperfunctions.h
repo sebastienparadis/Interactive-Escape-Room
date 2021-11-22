@@ -7,11 +7,11 @@
 int ReadReed();
 
 // JOYSTICK //
-int ReadJoystick(ADC_HandleTypeDef *adc);
+int ReadJoystick();
 
 // 7-SEGMENT DISPLAY //
 void PrintLocation(char location);
 
 // PHOTO RESISTOR //
-uint16_t ReadPhotoResistor(ADC_HandleTypeDef *adc); 
-bool CheckPhotoResistor(uint16_t RoomBrightness, ADC_HandleTypeDef *adc);
+uint16_t ReadPhotoResistor(); 
+bool CheckPhotoResistor(uint16_t RoomBrightness);
