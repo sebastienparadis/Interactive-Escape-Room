@@ -2,22 +2,22 @@
 #include "helperfunctions.h"
 #include "main.h"
 
-// FUNCTION DEFINITIONS
+// FUNCTION DEFINITIONS //
 
-// READ REED SWITCH
+// READ REED SWITCH //
 /* 
 Return an int where each bit corresponds to a reed switch being on, ob10000 being the first
 note: this is used to verify that the user has the proper pins activated after each mini-game
-
-LOCATION LAYOUT
+*/
+int ReadReed()
+{
+/* Location layout 
 First Location,  "M"  -->    GPIO PIN B 10
 Second Location, "O"  -->    GPIO PIN B 4
 Third Location,  "R"  -->    GPIO PIN B 5
 Fourth Location, "S"  -->    GPIO PIN B 3
 Fifth Location,  "E"  -->    GPIO PIN A 10 
 */
-int ReadReed()
-{
     int output;
     output = 0;
     if (!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10)) //Check if the first reed switch is activated
@@ -44,13 +44,12 @@ int ReadReed()
     return output;
 }
 
-// READ JOYSTICK
+// READ JOYSTICK //
 /* 
 Detect whether the direction of an input from the joystick, either left, up, right, or down.
 Return a distinct integer value for each of the four possible directions.
 note: this is used to determine the attemptive pattern input by the user to compare to the actual pattern. 
 */
-
 int ReadJoystick(ADC_HandleTypeDef *adc)
 {
     uint16_t user_y0 = ReadADC(adc, ADC_CHANNEL_0); //up & down
@@ -81,7 +80,7 @@ int ReadJoystick(ADC_HandleTypeDef *adc)
 
 
 
-// PRINT FIRST CHARACTER OF NEXT LOCATION ON 7-SEGMENT DISPLAY
+// PRINT FIRST CHARACTER OF NEXT LOCATION ON 7-SEGMENT DISPLAY //
 /* GPIO Pin layout
 Segment A (TOP) --> B8 --> GPIOB, GPIO_PIN_8;
 Segment B (UPPER RIGHT) --> B9 --> GPIOB, GPIO_PIN_9;
