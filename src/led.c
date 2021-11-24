@@ -1,6 +1,39 @@
 #include "main.h"
 #include "led.h"
 
+//lights all the LEDS on a specific side with the specified colour 
+//with 1 as left, 2 as top, 3 as right, 4 as bottom, and 5 as the entire boarder anything else resets all the LEDs
+void SetLEDSide(int LEDside, int Red, int Green, int Blue ){
+    Reset_LED();
+    switch(LEDside){
+        case 1:
+            for(int i = 0; i < 35; ++i){
+                Set_LED(i, Red, Green, Blue);
+            }
+            break;
+        case 2:
+            for(int i = 35; i < 89; ++i){
+                Set_LED(i, Red, Green, Blue);
+            }
+            break;
+        case 3:
+            for(int i = 89; i < 125; ++i){
+                Set_LED(i, Red, Green, Blue);
+            }
+            break;
+        case 4:
+            for(int i = 125; i < 180; ++i){
+                Set_LED(i, Red, Green, Blue);
+            }
+            break;
+        case 5:
+            for(int i = 0; i < 180; ++i){
+                Set_LED(i, Red, Green, Blue);
+            }
+            break;
+    }
+}
+
 //all code below this point is part of the LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
 
 void Set_LED (int LEDnum, int Red, int Green, int Blue)
