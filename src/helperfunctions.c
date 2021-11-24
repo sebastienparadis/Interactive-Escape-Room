@@ -4,7 +4,7 @@
 
 // FUNCTION DEFINITIONS //
 
-// READ REED SWITCH //
+// Read Reed Switches //
 /* 
 Return an int where each bit corresponds to a reed switch being on, ob10000 being the first
 note: this is used to verify that the user has the proper pins activated after each mini-game
@@ -40,11 +40,10 @@ Fifth Location,  "E"  -->    GPIO PIN A 10
     {
         output += 0b1;
     }    
-
     return output;
 }
 
-// READ JOYSTICK //
+// Read Joystick //
 /* 
 Detect whether the direction of an input from the joystick, either left, up, right, or down.
 Return a distinct integer value for each of the four possible directions.
@@ -80,7 +79,7 @@ int ReadJoystick(ADC_HandleTypeDef *adc)
 
 
 
-// PRINT FIRST CHARACTER OF NEXT LOCATION ON 7-SEGMENT DISPLAY //
+// Print to 7-Segment Display //
 /* GPIO Pin layout
 Segment A (TOP) --> B8 --> GPIOB, GPIO_PIN_8;
 Segment B (UPPER RIGHT) --> B9 --> GPIOB, GPIO_PIN_9;
@@ -124,7 +123,6 @@ void PrintLocation(char location)
     if (location == 'S')
     {
         //print 5
-        
         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, true); //Top
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, true); //Lower Right
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, true); //Bottom
@@ -143,14 +141,14 @@ void PrintLocation(char location)
     }
 }
 
-// READ PHOTO RESISTOR
+// Read Photo Resistor //
 // Read the photoresistor voltage value
 uint16_t ReadPhotoResistor()
 {
     return ReadADC(&adcInstance, ADC_CHANNEL_4); 
 }
 
-// CHECK AND COMPARE PHOTO RESISTOR VALUES
+// Check Photo Resistor //
 // Compare the recorded room brightness with the current brightness.
 // Checks if there is a significant voltage increase, indicating a flashed light
 bool CheckPhotoResistor(uint16_t RoomBrightness)

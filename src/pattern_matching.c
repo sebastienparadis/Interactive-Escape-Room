@@ -1,11 +1,12 @@
 #include "pattern_matching.h"
 #include "ece198.h"
 #include <stdbool.h>
+#include "led.c"
 
 
 // This function can be called for each of the different levels of the pattern game
 // Arguments include the amount of flashes in the random sequence, as well as the delay between flashes
-void PatternGame(int length, int delay)
+void PatternMatchingGame(int length, int delay)
 // This allows for the modifying of the difficulty of the pattern matching level
 {
     int pattern_game[length];
@@ -28,19 +29,19 @@ void PatternGame(int length, int delay)
         }
         
         int user_trial[length];
+        
         for (int i = 0; i<length; ++i)
             {
                 while (!ReadJoystick())
-                {
-                }
+                {/* Do nothing */}
 
                 user_trial[i] = ReadJoystick();
                 SetLEDSide(user_trial[i], 0, 0, 255);
                 WS2812_Send();
                 
                 while(ReadJoystick())
-                {
-                }
+                {/* Do nothing */}
+                
             }
 
         //check for the pattern
