@@ -27,6 +27,7 @@
 #include "helperfunctions.h"
 #include "reaction_time.h"
 #include "pattern_matching.h"
+#include "guitar_hero.h"
 
 
 
@@ -70,7 +71,7 @@ MX_TIM1_Init();
 //ReactionTimeGame();
 while(!ReadJoystick()){}
 srand(HAL_GetTick());
-PatternMatchingGame(8, 150);
+GuitarHeroGame();
 SetLEDSide(5,0,255,0);
 WS2812_Send();
         // Delay a random amount of time from 2 to 10 seconds

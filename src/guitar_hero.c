@@ -9,8 +9,8 @@
 void GuitarHeroGame(void){
     bool won = false;
     int TotalPosition = 0;
-    int GuitarHeroGameInstancePoints[20];
-    for(int i = 0; i < 20; ++i){
+    int GuitarHeroGameInstancePoints[GuitarHeroGameLength];
+    for(int i = 0; i < GuitarHeroGameLength; ++i){
         TotalPosition -= ((rand() % 10) + 1);
         GuitarHeroGameInstancePoints[i] = TotalPosition;
     }
@@ -18,31 +18,31 @@ void GuitarHeroGame(void){
     TIM2_Init(GuitarHeroGameSpeed);
 
     while(!won){
-        for(int i = 0; i < 20; ++i){
+        for(int i = 0; i < GuitarHeroGameLength; ++i){
             GuitarHeroPoints[i] = GuitarHeroGameInstancePoints[i];
         }
         GuitarHeroStartTime = HAL_GetTick();
         TIM2_Start();
-
+        int hit = 0;
         while(GuitarHeroStartTime + GameTime > HAL_GetTick()){
             while(!ReadJoystick()){}
             int CurrentPosition = (HAL_GetTick()-GuitarHeroStartTime)/GuitarHeroGameSpeed;
-            for(int i = 0; i < 20; ++i){
+            for(int i = 0; i < GuitarHeroGameLength; ++i){
                 if(GuitarHeroPoints[i] + CurrentPosition == 44){
                     GuitarHeroPoints[i] = 0;
+                    SetGuitarHeroPosition(44,0,255,0);
                 } else if(GuitarHeroPoints[i] + CurrentPosition < 44){
                     break;
                 }
-            }
+            }  
             while(ReadJoystick()){}
         }
-        int miss = 0;
-        for (int i = 0; i < 20; ++i){
-            if(GuitarHeroPoints[i]){
-                ++miss;
+        for (int i = 0; i < GuitarHeroGameLength; ++i){
+        if(!GuitarHeroPoints[i]){
+            ++hit;
             }
         }
-        if (miss<5){
+        if (hit>10){
             won = true;
         }
     }
@@ -52,7 +52,7 @@ void GuitarHeroGame(void){
 void MoveGuitarHeroPoints(){
     int CurrentPosition = (HAL_GetTick()-GuitarHeroStartTime)/GuitarHeroGameSpeed;
     Reset_LED();
-    for(int i = 0; i < 20; ++i){
+    for(int i = 0; i < GuitarHeroGameLength; ++i){
         int position = GuitarHeroPoints[i] + CurrentPosition;
         if(position < 0){
             break;
