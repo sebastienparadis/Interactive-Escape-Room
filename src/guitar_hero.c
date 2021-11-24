@@ -46,7 +46,7 @@ void GuitarHeroGame(void){
             won = true;
         }
     }
-    
+    TIM2_Stop();
 }
 
 void MoveGuitarHeroPoints(){
