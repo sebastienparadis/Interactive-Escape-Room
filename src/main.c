@@ -26,6 +26,7 @@
 #include "initfunctions.h"
 #include "helperfunctions.h"
 #include "reaction_time.h"
+#include "pattern_matching.h"
 
 
 
@@ -40,7 +41,6 @@ void DisplaySensor(GPIO_TypeDef *port, uint16_t pin){
 
 int main(void)
 {
-  srand(time(NULL));
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 //start of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
@@ -67,8 +67,12 @@ MX_TIM1_Init();
     InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
-ReactionTimeGame();
-
+//ReactionTimeGame();
+while(!ReadJoystick()){}
+srand(HAL_GetTick());
+PatternMatchingGame(8, 150);
+SetLEDSide(5,0,255,0);
+WS2812_Send();
         // Delay a random amount of time from 2 to 10 seconds
         // Checks if  user is holding down joystick before the flash     
       

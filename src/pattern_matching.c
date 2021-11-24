@@ -16,6 +16,7 @@ void PatternMatchingGame(int length, int delay)
     // Initialize the respective sequence with the LED ranges for the left, up, right, and down sides of the board
     for (int i=0; i < length; i++)
         {
+            //pattern_game[i] = (i %4)+1;
             pattern_game[i] = ((rand()%4) + 1); // "rand()%4 + 1" selects a random integer between 1, 2, 3, and 4.
         }    
 
@@ -28,7 +29,12 @@ void PatternMatchingGame(int length, int delay)
             SetLEDSide(pattern_game[i], 0, 0, 255);
             WS2812_Send();
             HAL_Delay(delay);
+            Reset_LED();
+            WS2812_Send();
+            HAL_Delay(delay);
         }
+        Reset_LED();
+        WS2812_Send();
         
         int user_trial[length];
         
@@ -43,6 +49,8 @@ void PatternMatchingGame(int length, int delay)
                 
                 while(ReadJoystick())
                 {/* Do nothing */}
+                Reset_LED();
+                WS2812_Send();
                 
             }
 
