@@ -1,4 +1,6 @@
 #include "reaction_time.h"
+#include "helperfunctions.h"
+#include <stdlib.h>
 
 void ReactionTimeGame()
 {
@@ -40,7 +42,7 @@ void ReactionTimeGame()
             success_count++; // Record the users success
         }
 
-        if (success_count = 3) // Once the user has reacted quick enough a total of 3 times, they have won
+        if (success_count == 3) // Once the user has reacted quick enough a total of 3 times, they have won
         {
             won = true;
         }

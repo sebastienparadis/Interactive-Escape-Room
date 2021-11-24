@@ -1,7 +1,9 @@
+#include "led.h"
 #include "pattern_matching.h"
 #include "ece198.h"
 #include <stdbool.h>
-#include "led.c"
+#include "helperfunctions.h"
+#include <stdlib.h>
 
 
 // This function can be called for each of the different levels of the pattern game
@@ -25,7 +27,7 @@ void PatternMatchingGame(int length, int delay)
             // Output the light sequence, flashing in the sequence order on the appropriate sides of the board
             SetLEDSide(pattern_game[i], 0, 0, 255);
             WS2812_Send();
-            HAL_DELAY(delay);
+            HAL_Delay(delay);
         }
         
         int user_trial[length];

@@ -1,3 +1,5 @@
+#include "ece198.h"
+
 void MoveGuitarHeroPoints(void);
 void GuitarHeroGame(void);
 

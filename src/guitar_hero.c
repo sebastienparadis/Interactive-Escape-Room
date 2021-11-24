@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "initfunctions.h"
 #include "helperfunctions.h"
+#include <stdlib.h>
 
 void GuitarHeroGame(void){
     bool won = false;
@@ -48,7 +49,7 @@ void GuitarHeroGame(void){
     
 }
 
-MoveGuitarHeroPoints(){
+void MoveGuitarHeroPoints(){
     int CurrentPosition = (HAL_GetTick()-GuitarHeroStartTime)/GuitarHeroGameSpeed;
     Reset_LED();
     for(int i = 0; i < 20; ++i){

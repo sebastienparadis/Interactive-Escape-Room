@@ -1,5 +1,6 @@
-#include "main.h"
 #include "led.h"
+#include "main.h"
+
 
 //lights all the LEDS on a specific side with the specified colour 
 //with 1 as left, 2 as top, 3 as right, 4 as bottom, and 5 as the entire boarder anything else resets all the LEDs
