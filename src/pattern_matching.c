@@ -3,10 +3,13 @@
 #include <stdbool.h>
 
 
-
+// This function can be called for each of the different levels of the pattern game
+// Arguments include the amount of flashes in the random sequence, as well as the delay between flashes
 void PatternGame(int length, int delay)
+// This allows for the modifying of the difficulty of the pattern matching level
 {
     int pattern_game[length];
+
     // Initialize the respective sequence with the LED ranges for the left, up, right, and down sides of the board
     for (int i=0; i < length; i++)
         {
@@ -27,12 +30,17 @@ void PatternGame(int length, int delay)
         int user_trial[length];
         for (int i = 0; i<length; ++i)
             {
-                while (!ReadJoystick()){}
+                while (!ReadJoystick())
+                {
+                }
+
                 user_trial[i] = ReadJoystick();
                 SetLEDSide(user_trial[i], 0, 0, 255);
                 WS2812_Send();
-                while(ReadJoystick()){}
-
+                
+                while(ReadJoystick())
+                {
+                }
             }
 
         //check for the pattern
@@ -45,16 +53,18 @@ void PatternGame(int length, int delay)
                 won = false;
                 break;
             }
-            
         }
+        // Outputs 3 consecutive flashes to the user if they do not input the pattern correctly
         if (!won){
             SetLEDSide(5, 255, 0, 0); // 
             WS2812_Send();
-            HAL_Delay(500);
+            HAL_Delay(250);
             SetLEDSide(5, 0,0,0);
             WS2812_Send();
-            HAL_Delay(500);
+            HAL_Delay(250);
+            SetLEDSide(5, 0,0,0);
+            WS2812_Send();
+            HAL_Delay(250);
         }
     }
 }
-
