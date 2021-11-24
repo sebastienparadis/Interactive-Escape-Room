@@ -164,3 +164,22 @@ bool CheckPhotoResistor(uint16_t RoomBrightness)
         return 0;
     }
 }
+
+
+// Timer 2 //
+
+//enable timer 2
+void TIM2_Start(void){
+    TIM2->CR1 |= TIM_CR1_CEN; // Enable this timer by setting the enabled bit in the control register to a 1
+}
+
+//disable timer 2
+void TIM2_Stop(void){
+    TIM2->CR1 &= ~TIM_CR1_CEN; // disable this timer by setting the enabled bit in the control register to a 0
+}
+
+//Handler for interupts fired by timer 2
+void TIM2_IRQHandler(void) {
+  TIM2->SR &= ~TIM_SR_UIF; // clear update interupt bit from status register (to allow next interupt to fire) 
+  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
+}

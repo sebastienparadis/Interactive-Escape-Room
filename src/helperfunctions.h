@@ -15,3 +15,8 @@ void PrintLocation(char location);
 // PHOTO RESISTOR //
 uint16_t ReadPhotoResistor(); 
 bool CheckPhotoResistor(uint16_t RoomBrightness);
+
+// Timer 2 //
+void TIM2_Start(void);
+void TIM2_Stop(void);
+void TIM2_IRQHandler(void);
