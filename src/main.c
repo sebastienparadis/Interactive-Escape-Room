@@ -53,7 +53,7 @@ MX_TIM1_Init();
 //end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
  // Peripherals (including GPIOs) are disabled by default to save power, so we
     // use the Reset and Clock Control registers to enable the GPIO peripherals that we're using.
-SerialSetup(9600);
+
     __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
@@ -68,10 +68,10 @@ SerialSetup(9600);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
 ReactionTimeGame();
-while(1){
-HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
-  
-}
+
+        // Delay a random amount of time from 2 to 10 seconds
+        // Checks if  user is holding down joystick before the flash     
+      
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
     // set up for serial communication to the host computer
@@ -79,27 +79,23 @@ HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
     //SerialSetup(9600);
     //SerialPuts("\r\n\n");
 #ifdef LED_JOYSTICK_TEST
-    __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
-    ADC_HandleTypeDef adcInstance; // this variable stores an instance of the ADC
-    InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
+  // enable ADC 1
+      // initialize the ADC instance
     // Enables the input pins
     // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
-    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0);   
-    int i=0;
     while (true)
     {
-        if(ReadJoystick(&adcInstance))
+        if(ReadJoystick())
         {
-          if(ReadJoystick(&adcInstance) ==1)
+          if(ReadJoystick() ==1)
             Set_LED(0,115,20,20);
-          if(ReadJoystick(&adcInstance) ==2)
+          if(ReadJoystick() ==2)
             Set_LED(0,20,90,40);
-          if(ReadJoystick(&adcInstance) ==3)
+          if(ReadJoystick() ==3)
             Set_LED(0,200,50,5);
-          if(ReadJoystick(&adcInstance) ==4)
+          if(ReadJoystick() ==4)
             Set_LED(0,12,100,90);
           WS2812_Send();
-          ++i;
         }
         
     }

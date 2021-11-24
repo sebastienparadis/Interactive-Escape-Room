@@ -51,10 +51,10 @@ Detect whether the direction of an input from the joystick, either left, up, rig
 Return a distinct integer value for each of the four possible directions.
 note: this is used to determine the attemptive pattern input by the user to compare to the actual pattern. 
 */
-int ReadJoystick(ADC_HandleTypeDef *adc)
+int ReadJoystick()
 {
-    uint16_t user_y0 = ReadADC(adc, ADC_CHANNEL_0); //up & down
-    uint16_t user_x1 = ReadADC(adc, ADC_CHANNEL_1); //left & right
+    uint16_t user_y0 = ReadADC(&adcInstance, ADC_CHANNEL_0); //up & down
+    uint16_t user_x1 = ReadADC(&adcInstance, ADC_CHANNEL_1); //left & right
     
     // Check for left
     if (user_x1 > 3800) 

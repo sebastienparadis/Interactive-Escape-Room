@@ -1,6 +1,7 @@
 #include "reaction_time.h"
 #include "helperfunctions.h"
 #include <stdlib.h>
+#include "main.h"
 
 void ReactionTimeGame()
 {
@@ -10,16 +11,16 @@ void ReactionTimeGame()
     bool won = false;
 
     while (won == false)
-    {       
+    {   
+     
         // Delay a random amount of time from 2 to 10 seconds
-        HAL_Delay(10000/((rand()%8) + 2)); 
-
+        HAL_Delay(500*((rand()%9)+2)); 
         // Checks if  user is holding down joystick before the flash     
         while(ReadJoystick())
-        {/* Do nothing */}  
+        {/* Do nothing */} 
         
         // Set LED's to flash in white on all four sides
-        SetLEDSide(5, 255, 255, 255); 
+        SetLEDSide(5, 255, 0, 0); 
         WS2812_Send(); 
         // Record time at which the light flashes to  user
         flash_time = HAL_GetTick(); 
@@ -37,9 +38,10 @@ void ReactionTimeGame()
         while(ReadJoystick())
         {/* Do nothing */}
         
-        if ((input_time - flash_time) <= 500) // Calculate reaction time, and check if it is fast enough
+        if ((input_time - flash_time) <= 200) // Calculate reaction time, and check if it is fast enough
         {
             success_count++; // Record the users success
+        } else {
         }
 
         if (success_count == 3) // Once the user has reacted quick enough a total of 3 times, they have won
@@ -47,19 +49,4 @@ void ReactionTimeGame()
             won = true;
         }
     }
-    SetLEDSide(1, 0, 255, 0);  
-    WS2812_Send();
-    HAL_Delay(150);
-    SetLEDSide(2,255,0,255);
-    WS2812_Send();
-    HAL_Delay(150);
-    SetLEDSide(3, 255,255,0);
-    WS2812_Send();
-    HAL_Delay(150);
-    SetLEDSide(4, 0,255,255);
-    WS2812_Send();
-    HAL_Delay(150);
-    SetLEDSide(5, 255,255,255);
-    WS2812_Send();
-    HAL_Delay(150);
 }
