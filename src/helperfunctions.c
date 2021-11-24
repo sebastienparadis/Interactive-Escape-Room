@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include "helperfunctions.h"
 #include "main.h"
+#include "guitar_hero.h"
+#include "led.h"
 
 // FUNCTION DEFINITIONS //
 
@@ -179,5 +181,6 @@ void TIM2_Stop(void){
 //Handler for interupts fired by timer 2
 void TIM2_IRQHandler(void) {
   TIM2->SR &= ~TIM_SR_UIF; // clear update interupt bit from status register (to allow next interupt to fire) 
-  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
+  MoveGuitarHeroPoints();
+  WS2812_Send();
 }
