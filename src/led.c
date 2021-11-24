@@ -34,6 +34,21 @@ void SetLEDSide(int LEDside, int Red, int Green, int Blue ){
     }
 }
 
+//sets the LEDs in the guitar hero map position specified to the specified colour
+void SetGuitarHeroPosition(int position,  int Red, int Green, int Blue ){
+    //62.5th is the center led on the top we will send LEDs out around and down from this position so one starts
+    //at the 62nd (index 61) and goes backward and one starts at 63rd (index 62) and goes forward we will send them
+    // as pairs with a leading lit led and a trailing unlit led so the backward led will start at index 60 and
+    // the forward led will start at index 63 both lights will move by 2
+    if(position < 45){   
+        Set_LED(60 - 2*position > 0 ? 60 - 2*position : 60 - 2*position + 180, Red, Green, Blue);
+        Set_LED(62 + 2*position, Red, Green, Blue);
+    }
+    if(position == 44){
+        Set_LED(151, Red, Green, Blue);
+    }
+} 
+
 //all code below this point is part of the LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
 
 void Set_LED (int LEDnum, int Red, int Green, int Blue)

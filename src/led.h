@@ -1,6 +1,6 @@
 #include "stm32f4xx_hal.h"
 
-#define MAX_LED 300
+#define MAX_LED 180
 #define USE_BRIGHTNESS 0
 
 
@@ -16,3 +16,4 @@ uint16_t pwmData[(24*MAX_LED)+50];
 // below is not from drivers //
 
 void SetLEDSide(int LEDside, int Red, int Green, int Blue );
+void SetGuitarHeroPosition(int position,  int Red, int Green, int Blue );
