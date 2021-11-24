@@ -17,3 +17,4 @@ uint16_t pwmData[(24*MAX_LED)+50];
 
 void SetLEDSide(int LEDside, int Red, int Green, int Blue );
 void SetGuitarHeroPosition(int position,  int Red, int Green, int Blue );
+void SetMorsePosition(int position,  int Red, int Green, int Blue );

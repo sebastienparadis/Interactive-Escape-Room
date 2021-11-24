@@ -50,6 +50,15 @@ void SetGuitarHeroPosition(int position,  int Red, int Green, int Blue ){
     }
 } 
 
+
+//sets the LEDs in the morse map position specified to the specified colour
+void SetMorsePosition(int position,  int Red, int Green, int Blue ){
+    //62.5th is the center led on the top we will send LEDs out from there to show the user whether they are correctly
+	// inputing the morse code
+    Set_LED(60 - position, Red, Green, Blue);
+    Set_LED(62 + position, Red, Green, Blue);
+} 
+
 //all code below this point is part of the LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
 
 void Set_LED (int LEDnum, int Red, int Green, int Blue)

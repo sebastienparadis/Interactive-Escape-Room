@@ -63,17 +63,22 @@ MX_TIM1_Init();
     InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
     // Enables the input pins
     // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
-    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1, GPIO_MODE_ANALOG, GPIO_NOPULL, 0); 
+    InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4, GPIO_MODE_ANALOG, GPIO_NOPULL, 0); 
     // initialize the pins to be input, output, alternate function, etc...
     InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
 
 //ReactionTimeGame();
-while(!ReadJoystick()){}
+//uint16_t RoomBrightness = ReadPhotoResistor();
+//while(!CheckPhotoResistor(RoomBrightness)){}
 srand(HAL_GetTick());
-GuitarHeroGame();
+//GuitarHeroGame();
+Morse();
+Reset_LED();
 SetLEDSide(5,0,255,0);
 WS2812_Send();
+
+
         // Delay a random amount of time from 2 to 10 seconds
         // Checks if  user is holding down joystick before the flash     
       
