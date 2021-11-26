@@ -25,9 +25,13 @@ void Morse(){
         //record when they turn the flashlight off and calculate whether it was a dot or dash 
         while(CheckPhotoResistor(RoomBrightness)){}
         Diff = HAL_GetTick() - Diff;
-        uint8_t code = (Diff > 400);
+        uint8_t code = (Diff > 400) ? 1 : 0;
         
-
+            for(int j=0; j < Diff/50; ++j ){
+                Set_LED(j,0,0,255);
+            }
+            WS2812_Send();
+            HAL_Delay(100);
         // if they gave the wrong symbol start again 
         if (!(code == E7[i])){
             SetLEDSide(5,255,0,0);
@@ -37,7 +41,7 @@ void Morse(){
             Set_LED(61, 255, 255, 255);
             WS2812_Send();
             i = 0;
-        } else if (i != 5) {
+        } else {
             Reset_LED();
             for(int j=0; j <= i ; ++j ){
                 SetMorsePosition(j,0,255,0);
@@ -47,8 +51,6 @@ void Morse(){
                 Set_LED(j,0,0,255);
             }
             WS2812_Send();
-            ++i;
-        } else {
             ++i;
         }
     }

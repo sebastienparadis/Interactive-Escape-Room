@@ -57,7 +57,7 @@ int ReadJoystick()
     uint16_t user_x1 = ReadADC(&adcInstance, ADC_CHANNEL_1); //left & right
     
     // Check for left
-    if (user_x1 > 3800) 
+    if (user_x1 > 3900) 
     {
         return 1;
     }
@@ -155,7 +155,7 @@ uint16_t ReadPhotoResistor()
 // Checks if there is a significant voltage increase, indicating a flashed light
 bool CheckPhotoResistor(uint16_t RoomBrightness)
 {
-    if ((ReadPhotoResistor() - RoomBrightness) >= 300)
+    if ((ReadPhotoResistor() - RoomBrightness) >= 500)
     {
         return 1;
     }

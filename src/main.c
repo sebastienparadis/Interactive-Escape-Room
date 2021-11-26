@@ -1,3 +1,6 @@
+//#define PHOTORESISTOR_READER
+#define GAME
+//#define GAMES_TEST_NO_REED
 //#define LED_JOYSTICK_TEST
 //#define BUTTON_BLINK
 //#define LIGHT_SCHEDULER
@@ -48,39 +51,145 @@ int main(void)
   /* Configure the system clock */
   SystemClock_Config();
   /* Initialize all led peripherals */
-MX_GPIO_Init();
-MX_DMA_Init();
-MX_TIM1_Init();
+    MX_GPIO_Init();
+    MX_DMA_Init();
+    MX_TIM1_Init();
 //end of code from LED drivers taken from https://controllerstech.com/interface-ws2812-with-stm32/ 
- // Peripherals (including GPIOs) are disabled by default to save power, so we
+    // Peripherals (including GPIOs) are disabled by default to save power, so we
     // use the Reset and Clock Control registers to enable the GPIO peripherals that we're using.
-
     __HAL_RCC_GPIOA_CLK_ENABLE(); // enable port A (for the on-board LED, for example)
     __HAL_RCC_GPIOB_CLK_ENABLE(); // enable port B (for the rotary encoder inputs, for example)
     __HAL_RCC_GPIOC_CLK_ENABLE(); // enable port C (for the on-board blue pushbutton, for example)
     __HAL_RCC_ADC1_CLK_ENABLE();        // enable ADC 1
-     // this variable stores an instance of the ADC
+    // this variable stores an instance of the ADC
     InitializeADC(&adcInstance, ADC1);  // initialize the ADC instance
     // Enables the input pins
     // (on this board, pin A0 is connected to channel 0 of ADC1, and A1 is connected to channel 1 of ADC1)
     InitializePin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4, GPIO_MODE_ANALOG, GPIO_NOPULL, 0); 
     // initialize the pins to be input, output, alternate function, etc...
     InitializePin(GPIOB, GPIO_PIN_10 | GPIO_PIN_4 | GPIO_PIN_5 |  GPIO_PIN_3 , GPIO_MODE_INPUT, GPIO_PULLUP, 0);
-    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(GPIOA, GPIO_PIN_10, GPIO_MODE_INPUT, GPIO_PULLUP, 0 );
+    Initialize7Segment();
 
-//ReactionTimeGame();
-//uint16_t RoomBrightness = ReadPhotoResistor();
-//while(!CheckPhotoResistor(RoomBrightness)){}
-srand(HAL_GetTick());
-//GuitarHeroGame();
-Morse();
-Reset_LED();
-SetLEDSide(5,0,255,0);
-WS2812_Send();
+#ifdef PHOTORESISTOR_READER
+while(true){
+    Reset_LED();
+    for(int i = 0; i < ReadPhotoResistor()/100; ++i){
+        Set_LED(i, 255,0,0);
+    }
+    WS2812_Send();
+}
+#endif
 
 
-        // Delay a random amount of time from 2 to 10 seconds
-        // Checks if  user is holding down joystick before the flash     
+#ifdef GAME
+    Reset_LED();
+    WS2812_Send();
+
+    while(!(ReadReed() & 0b10000)){}
+    PrintLocation('O');
+
+    while(!(ReadReed() & 0b01000)){}
+    PrintLocation(0);
+    srand(HAL_GetTick());
+    ReactionTimeGame();
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(1000);
+    Reset_LED();
+    WS2812_Send();
+    PrintLocation('R');
+
+    while(!(ReadReed() & 0b00100)){}
+    PrintLocation(0);
+    PatternMatchingGame(4, 300);
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(100);
+    Reset_LED();
+    WS2812_Send();
+    PatternMatchingGame(6, 225);
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(100);
+    Reset_LED();
+    WS2812_Send();
+    PatternMatchingGame(8, 150);
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(1000);
+    Reset_LED();
+    WS2812_Send();
+    PrintLocation('S');
+
+    while(!(ReadReed() & 0b10)){}
+    PrintLocation(0);
+    GuitarHeroGame();
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(1000);
+    Reset_LED();
+    WS2812_Send();
+    PrintLocation('E');
+
+    while(!(ReadReed() & 0b1)){}
+    PrintLocation(0);
+    Morse();
+    while(1){
+    Reset_LED();
+    for(int i = 0; i < 23; ++i){
+        SetGuitarHeroPosition(i, 0, 255, 0);
+        SetGuitarHeroPosition(45-i, 0, 255, 0);
+        WS2812_Send();
+        HAL_Delay(5);
+    }
+    Reset_LED();
+    for(int i = 23; i >= 0; --i){
+        SetGuitarHeroPosition(i, 0, 255, 0);
+        SetGuitarHeroPosition(45-i, 0, 255, 0);
+        WS2812_Send();
+        HAL_Delay(5);
+    }
+    for(int i = 0; i<3; ++i){
+       Reset_LED();
+       WS2812_Send();
+       HAL_Delay(100);
+       SetLEDSide(5,0,255,0);
+       WS2812_Send();
+       HAL_Delay(100); 
+    }
+}
+    
+#endif
+
+#ifdef GAMES_TEST_NO_REED
+    while(!ReadJoystick());
+    Reset_LED();
+    WS2812_Send();
+    srand(HAL_GetTick());
+    ReactionTimeGame();
+    HAL_Delay(1000);
+    Reset_LED();
+    WS2812_Send();
+    PatternMatchingGame(8, 200);
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(1000);
+    Reset_LED();
+    WS2812_Send();
+    GuitarHeroGame();
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(1000);
+    Reset_LED();
+    WS2812_Send();
+    Morse();
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+    HAL_Delay(1000);
+    SetLEDSide(5,0,255,0);
+    WS2812_Send();
+#endif
       
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)

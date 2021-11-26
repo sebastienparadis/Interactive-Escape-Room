@@ -14,7 +14,7 @@ void ReactionTimeGame()
     {   
      
         // Delay a random amount of time from 2 to 10 seconds
-        HAL_Delay(500*((rand()%9)+2)); 
+        HAL_Delay(400*((rand()%9)+2)); 
         // Checks if  user is holding down joystick before the flash     
         while(ReadJoystick())
         {/* Do nothing */} 
@@ -38,7 +38,7 @@ void ReactionTimeGame()
         while(ReadJoystick())
         {/* Do nothing */}
         
-        if ((input_time - flash_time) <= 200) // Calculate reaction time, and check if it is fast enough
+        if ((input_time - flash_time) <= 150) // Calculate reaction time, and check if it is fast enough
         {
             success_count++; // Record the users success
         } else {
